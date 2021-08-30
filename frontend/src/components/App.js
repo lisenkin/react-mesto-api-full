@@ -42,27 +42,26 @@ function App() {
   const [isSuccess, setSuccess] = React.useState(false);
 
 
-  //загрузим карточки
-  useEffect(() => {
-    //setIsLoading(true)
-    checkToken();
-    api.getInitialCards()
-      .then(res => {
-        setCards(res)
-      })
-      .catch(err => console.log(`Error: ${err}`))
-    // .finally(() => setIsLoading(false))
-  }, []);
 
-  //загрузим юзер инфо дернув апи
-  useEffect(() => {
-    api.getUserInfo()
-      .then(res => {
-        setCurrentUser(res);
-      })
-      .catch(err => console.log(`Error: ${err}`));
-  }, []);
-
+  // загрузим данные
+  React.useEffect(() => {
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userData, cards]) => {
+          setCurrentUser(userData.data)
+          setCards(cards.data)
+        })
+        .catch(err => {
+          console.log(`Данные с сервера не получены. Ошибка: ${err}.`)
+        })
+    }
+  }, [loggedIn])
+  
+  React.useEffect(() => {
+    if (loggedIn) {
+      history.push('/')
+    }
+  }, [loggedIn, history])
 
   //закрытие всех попапов (установим всем фолс)
   function closeAllPopups() {
