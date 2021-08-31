@@ -22,7 +22,7 @@ import * as auth from '../utils/auth';
 
 
 //попробуем так
-//стоило так радостно вспоминать классы что б снова переписывать  на функции(
+//скакать туда-сюда по репам не оч удобно :)
 function App() {
   const [currentUser, setCurrentUser] = useState({
     name: "Loading...",
@@ -41,27 +41,25 @@ function App() {
   const history = useHistory();
   const [isSuccess, setSuccess] = React.useState(false);
 
-
-
   // загрузим данные
-  React.useEffect(() => {
-    if (loggedIn) {
-      Promise.all([api.getUserInfo(), api.getInitialCards()])
-        .then(([userData, cards]) => {
-          setCurrentUser(userData.data)
-          setCards(cards.data)
-        })
-        .catch(err => {
-          console.log(`Данные с сервера не получены. Ошибка: ${err}.`)
-        })
-    }
-  }, [loggedIn])
-  
-  React.useEffect(() => {
-    if (loggedIn) {
-      history.push('/')
-    }
-  }, [loggedIn, history])
+React.useEffect(() => {
+  if (loggedIn) {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cards]) => {
+        setCurrentUser(userData.data)
+        setCards(cards.data)
+      })
+      .catch(err => {
+        console.log(`Данные с сервера не получены. Ошибка: ${err}.`)
+      })
+  }
+}, [loggedIn])
+
+React.useEffect(() => {
+  if (loggedIn) {
+    history.push('/')
+  }
+}, [loggedIn, history])
 
   //закрытие всех попапов (установим всем фолс)
   function closeAllPopups() {
@@ -84,7 +82,7 @@ function App() {
 
   //лайк с переделанным апи
   function handleCardLike(card) {
-    const isLiked = card.likes.some(item => item._id === currentUser._id);
+    const isLiked = card.likes.some(item => item === currentUser._id);
 
     api.changeLikeCardStatus(card._id, isLiked)
       .then(res => {
@@ -97,24 +95,24 @@ function App() {
   function handleCardDelete(card) {
     api.removeCard(card._id)
       .then(res => {
-        const newCards = cards.filter(item => item._id === card._id ? null : item);
+        const newCards = cards.filter(item => item === card ? null : item);
         setCards(newCards);
       })
       .catch(err => console.log(`Error: ${err}`));
   }
   //обновим юзер инфо на новую
-  function handleUpdateUser({ name, about }) {
-    api.setUserInfo({ name, about })
+  function handleUpdateUser(data) {
+    api.setUserInfo(data)
       .then(res => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch(err => console.log(`Error: ${err}`));
   }
   //обновим аватар
-  function handleUpdateAvatar(avatar) {
-    api.editUserAvatar(avatar)
-      .then(res => {
+  function handleUpdateAvatar(data) {
+    api.editUserAvatar(data)
+      .then(avatar => {
         setCurrentUser(avatar);
         closeAllPopups();
       })
@@ -122,10 +120,10 @@ function App() {
   }
 
   //добавить карточку
-  function handleAddPlaceSubmit({ name, link }) {
-    api.setCard({ name, link })
+  function handleAddPlaceSubmit(data) {
+    api.setCard(data)
       .then(res => {
-        setCards([res, ...cards]);
+        setCards([res.data, ...cards]);
         closeAllPopups();
       })
       .catch(err => console.log(`Error: ${err}`));
@@ -135,9 +133,9 @@ function App() {
     auth.register(email, password)
       .then((data) => {
         if (data){
-        history.push("/sign-in");
         setSuccess(true);
         setIsInfoTooltipOpen(true);
+        history.push("/sign-in");
         }
       })
 
@@ -153,6 +151,7 @@ function App() {
       auth.authorize(email, password)
       .then((data) => {
         if (data) {
+        localStorage.setItem('jwt', data.token);
         setEmail(email);
         setLoggedIn(true);
         history.push("/");
@@ -166,21 +165,23 @@ function App() {
   }
 //логаут
   function handleLogout() {
+    localStorage.removeItem('jwt');
     setEmail('');
     setLoggedIn(false);
     history.push('/sign-in');
   }
 
+  useEffect(() => {
   function checkToken() {
     //возьмем из jwt
-    const localToken = localStorage.getItem("jwt");
-    if (localToken) {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
-        .checkToken(localToken)
+        .checkToken(jwt)
         .then((data) => {
           if (data) {
+            setEmail(data.email);
             setLoggedIn(true);
-            setEmail(data.data.email);
             history.push("/");
           } else {
             setSuccess(false);
@@ -194,6 +195,9 @@ function App() {
         })
     }
   }
+  checkToken();
+},[history]);
+
 
   return (
     <div className="page__content">
