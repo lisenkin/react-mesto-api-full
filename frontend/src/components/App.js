@@ -170,7 +170,7 @@ React.useEffect(() => {
     setLoggedIn(false);
     history.push('/sign-in');
   }
-
+  // забытый быстрофикс почты
   useEffect(() => {
   function checkToken() {
     //возьмем из jwt
@@ -180,7 +180,7 @@ React.useEffect(() => {
         .checkToken(jwt)
         .then((data) => {
           if (data) {
-            setEmail(data.email);
+            setEmail(data.data.email);
             setLoggedIn(true);
             history.push("/");
           } else {
