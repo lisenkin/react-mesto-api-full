@@ -129,12 +129,11 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token,
         {
           maxAge: 3600000 * 24 * 7,
-
-httpOnly: true,
-sameSite: 'None',
-secure: true,
+          httpOnly: true,
+          sameSite: 'None',
+          secure: true,
         }).send({ message: 'Вход выполнен' });
- console.log(JWT_SECRET);
+      console.log(JWT_SECRET);
     })
     .catch(() => next(new UnauthorizedErr()));
 };

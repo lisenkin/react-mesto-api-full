@@ -3,3 +3,10 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 http://mesto.lisena.nomoredomains.work/
+
+API:
+https://api.mesto.lisena.nomoredomains.monster
+
+IP server:
+84.201.166.197
+
