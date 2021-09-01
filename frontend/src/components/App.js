@@ -168,7 +168,7 @@ React.useEffect(() => {
     localStorage.removeItem('jwt');
     setEmail('');
     setLoggedIn(false);
-    history.push('/signin');
+    history.push('/sign-in');
   }
 
   useEffect(() => {
@@ -216,13 +216,13 @@ React.useEffect(() => {
             cards={cards}
             loggedIn={loggedIn}
           />
-          <Route path='/signin'>
+          <Route path='/sign-in'>
             <Login onLogin={handleLogin} />
           </Route>
-          <Route path='/signup'>
+          <Route path='/sign-up'>
             <Register onRegister={handleRegister} />
           </Route>
-          <Route> {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}</Route>
+          <Route> {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
         </Switch>
 
         <Footer text="2021 mesto lisenkin" />
