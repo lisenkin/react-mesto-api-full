@@ -9,6 +9,7 @@ const BadRequestErr = require('../errors/BadRequestErr');
 const ConflictErr = require('../errors/ConflictErr');
 
 const { NODE_ENV, JWT_SECRET = 'secret' } = process.env;
+console.log(NODE_ENV, JWT_SECRET)
 // гет юзер
 
 module.exports.getUsers = (req, res, next) => {
@@ -128,9 +129,12 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token,
         {
           maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
+
+httpOnly: true,
+sameSite: 'None',
+secure: true,
         }).send({ message: 'Вход выполнен' });
+ console.log(JWT_SECRET);
     })
     .catch(() => next(new UnauthorizedErr()));
 };
