@@ -90,28 +90,6 @@ class Api {
     })
     .then(this._checkResponse)
   }
-  /*addLike(cardId) {
-    return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-      method: 'PUT',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(this._checkResponse)
-  }
-
-  removeLike(cardId) {
-    return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(this._checkResponse)
-  }*/
-  // avatar = data
   editUserAvatar(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
