@@ -135,7 +135,7 @@ React.useEffect(() => {
         if (data){
         setSuccess(true);
         setIsInfoTooltipOpen(true);
-        history.push("/sign-in");
+        history.push("/signin");
         }
       })
 
@@ -168,7 +168,7 @@ React.useEffect(() => {
     localStorage.removeItem('jwt');
     setEmail('');
     setLoggedIn(false);
-    history.push('/sign-in');
+    history.push('/signin');
   }
 
   useEffect(() => {
@@ -216,13 +216,13 @@ React.useEffect(() => {
             cards={cards}
             loggedIn={loggedIn}
           />
-          <Route path='/sign-in'>
+          <Route path='/signin'>
             <Login onLogin={handleLogin} />
           </Route>
-          <Route path='/sign-up'>
+          <Route path='/signup'>
             <Register onRegister={handleRegister} />
           </Route>
-          <Route> {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
+          <Route> {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}</Route>
         </Switch>
 
         <Footer text="2021 mesto lisenkin" />
