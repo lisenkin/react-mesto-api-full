@@ -9,7 +9,7 @@ const BadRequestErr = require('../errors/BadRequestErr');
 const ConflictErr = require('../errors/ConflictErr');
 
 const { NODE_ENV, JWT_SECRET = 'secret' } = process.env;
-console.log(NODE_ENV, JWT_SECRET)
+
 // гет юзер
 
 module.exports.getUsers = (req, res, next) => {
@@ -110,7 +110,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     upsert: false,
   })
     .orFail(new NotFoundErr('Пользователь с указанным _id не найден'))
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestErr('Переданы некорректные данные'));
@@ -135,7 +135,7 @@ module.exports.login = (req, res, next) => {
         }).send({ message: 'Вход выполнен' });
       console.log(JWT_SECRET);
     })
-    .catch(() => next(new UnauthorizedErr('Неверный логин либо пароль')));
+    .catch(() => next(new UnauthorizedErr()));
 };
 module.exports.signOut = (req, res) => {
   res.clearCookie('jwt').send({ message: 'Выход выполнен' });
