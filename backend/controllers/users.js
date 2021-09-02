@@ -120,6 +120,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     });
 };
 
+// сорри, забыла при сборке последней ошибку :( )
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -134,7 +135,7 @@ module.exports.login = (req, res, next) => {
           secure: true,
         }).send({ message: 'Вход выполнен' });
     })
-    .catch(() => next(new UnauthorizedErr()));
+    .catch(() => next(new UnauthorizedErr('неверный логин или пароль!')));
 };
 module.exports.signOut = (req, res) => {
   res.clearCookie('jwt').send({ message: 'Выход выполнен' });
